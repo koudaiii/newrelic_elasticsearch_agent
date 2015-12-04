@@ -9,10 +9,10 @@ require 'json'
 module NewRelic::Elasticsearch
   class Agent < NewRelic::Plugin::Agent::Base
 
-    agent_guid 'com.secondimpression.newrelic-elasticsearch-agent'
-    agent_version '1.1.0'
+    agent_guid 'com.rackertools.ESMonitor'
+    agent_version '1.2.0'
     agent_config_options :name, :url, :index, :username, :password
-    agent_human_labels('ElasticSearch') { name }
+    agent_human_labels('ES-Monitoring') { name }
 
     def setup_metrics
       @created_rate = NewRelic::Processor::EpochCounter.new
@@ -59,13 +59,21 @@ module NewRelic::Elasticsearch
       health_stats = JSON.parse( get_health_stats ) if get_health_stats
       if health_stats
         report_health(health_stats) if health_stats
-      end  
+      else
+        report_metric 'Health Status', 'State', '0' || 0
+      end
     end
 
     private
 
     def report_health hstats
-      report_metric 'Health Status', 'Status', hstats['status'] || 0
+      if hstats['status'] == 'green'
+        report_metric 'Health Status', 'State', '2' || 0
+      elsif hstats['status'] == 'yellow'
+        report_metric 'Health Status', 'State', '1' || 0
+      else
+        report_metric 'Health Status', 'State', '0' || 0
+      end
     end
     def report_index stats
       if stats['docs']
