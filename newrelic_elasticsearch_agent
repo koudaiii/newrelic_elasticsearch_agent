@@ -56,10 +56,17 @@ module NewRelic::Elasticsearch
 
         report_index(index_stats) if index_stats
       end
+      health_stats = JSON.parse( get_health_stats ) if get_health_stats
+      if health_stats
+        report_health(health_stats) if health_stats
+      end  
     end
 
     private
 
+    def report_health hstats
+      report_metric 'Health Status', 'Status', hstats['status'] || 0
+    end
     def report_index stats
       if stats['docs']
         report_metric 'Documented/Total', 'Documents', stats['docs']['count'] || 0
@@ -114,6 +121,10 @@ module NewRelic::Elasticsearch
 
     def get_index_stats
       get "#{url}/#{index}/_stats"
+    end
+
+    def get_health_stats
+      get "#{url}/_cluster/health"
     end
 
     def get url
