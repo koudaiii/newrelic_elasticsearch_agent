@@ -154,7 +154,7 @@ module NewRelic::Elasticsearch
     end
   end
 
-  NewRelic::Plugin::Config.config_file = File.dirname(__FILE__) + '/config/newrelic_plugin.yml'
+  NewRelic::Plugin::Config.config_file = File.dirname(__FILE__) + '/config/newrelic_plugin.yml.erb'
   NewRelic::Plugin::Setup.install_agent :elasticsearch, self
 
   NewRelic::Plugin::Run.setup_and_run
