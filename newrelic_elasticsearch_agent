@@ -5,6 +5,9 @@ require 'bundler/setup'
 require 'newrelic_plugin'
 require 'open-uri'
 require 'json'
+require 'dotenv'
+
+Dotenv.load
 
 module NewRelic::Elasticsearch
   class Agent < NewRelic::Plugin::Agent::Base
