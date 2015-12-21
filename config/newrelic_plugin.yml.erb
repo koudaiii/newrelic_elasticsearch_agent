@@ -2,7 +2,7 @@ newrelic:
   #
   # Update with your New Relic account license key:
   #
-  license_key: 'YOUR_LICENSE_KEY_HERE'
+  license_key: <%= ENV["NEWRELIC_LICENSE_KEY"] %>
   #
   # Set to '1' for verbose output, remove for normal output.
   # All output goes to stdout/stderr.
@@ -13,23 +13,23 @@ newrelic:
   # communicating with new relic servers if you are behind
   # a firewall.
   #
-  #proxy:
-  #  address: ''
-  #  port:
-  #  user:
-  #  password:
+  proxy:
+  address: <%= ENV["PROXY_URL"] %>
+  port: <%= ENV["PROXY_PORT"] %>
+  user: <%= ENV["PROXY_NAME"] %>
+  password: <%= ENV["PROXY_PASSWORD"] %>
 
 agents:
   elasticsearch:
     -
       # Application name
-      name: 'Application name'
+      name: <%= ENV["APPLICATION_NAME"] %>
 
-      url: 'http://localhost:9200'
+      url: <%= ENV["ELASTICSEARCH_URL"] %>
 
       # Username and password for HTTP basic auth
-      # username: ''
-      # password: ''
+      username: <%= ENV["ELASTICSEARCH_USER_NAME"] %>
+      password: <%= ENV["ELASTICSEARCH_PASSWORD"] %>
 
       # Index name
       # using '_all' with provide stats for all indices
